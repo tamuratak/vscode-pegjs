@@ -1,0 +1,62 @@
+{
+  "name": "vscode-pegjs",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "PEG.js language support for Visual Studio Code",
+  "homepage": "https://github.com/tamuratak/vscode-pegjs",
+  "main": "./out/src/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tamuratak/vscode-pegjs.git"
+  },
+  "engines": {
+    "vscode": "^1.30.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:pegjs"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "pegjs",
+        "aliases": [
+          "PEG.js (ES6+)",
+          "PEG.js",
+          "pegjs",
+          "peg.js"
+        ],
+        "extensions": [
+          ".pegjs"
+        ]
+      }
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.12.12",
+    "mocha": "^6.1.4",
+    "pegjs": "^0.10.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5",
+    "vscode": "^1.1.14"
+  },
+  "files": [
+    "bin/**/*",
+    "out/**/*",
+    "src/**/*"
+  ],
+  "keywords": [
+    "pegjs"
+  ],
+  "scripts": {
+    "generate": "pegjs -o out/src/parser.js src/parser.pegjs",
+    "compile": "tsc -p ./",
+    "build": "npm run compile && npm run generate",
+    "clean": "rm -rf out/src/* out/test/*",
+    "test": "mocha --ui tdd out/test/**/*.js"
+  }
+}
