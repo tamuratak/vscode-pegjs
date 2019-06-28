@@ -50,174 +50,56 @@ SOFTWARE.
 
 {
 
-    // Used as a shorthand property name for `LabeledExpression`
-    const pick = true;
-
-    // Used by `LabelIdentifier` to disallow the use of certain words as labels
-    const RESERVED_WORDS = {};
-
-    // Populate `RESERVED_WORDS` using the optional option `reservedWords`
-    const reservedWords = options.reservedWords || util.reservedWords;
-    if ( Array.isArray( reservedWords ) ) reservedWords.forEach( word => {
-
-        RESERVED_WORDS[ word ] = true;
-
-    } );
-
-    // Helper to construct a new AST Node
-    function createNode( type, details ) {
-
-        const node = new ast.Node( type, location() );
-        if ( details === null ) return node;
-
-        util.extend( node, details );
-        return util.enforceFastProperties( node );
-
-    }
-
-    // Used by `addComment` to store comments for the Grammar AST
-    const comments = options.extractComments ? {} : null;
-
-    // Helper that collects all the comments to pass to the Grammar AST
-    function addComment( text, multiline ) {
-
-        if ( options.extractComments ) {
-
-            const loc = location();
-
-            comments[ loc.start.offset ] = {
-                text: text,
-                multiline: multiline,
-                location: loc,
-            };
-
-        }
-
-        return text;
-
-    }
-
 }
 
 // ---- Syntactic Grammar -----
 
 Grammar
-  = __ initializer:(@Initializer __)? rules:(@Rule __)+ {
-
-        return new ast.Grammar( initializer, rules, comments, location() );
-
-    }
+  = __ initializer:(@Initializer __)? rules:(@Rule __)+
 
 Initializer
-  = code:CodeBlock EOS {
-
-        return createNode( "initializer", { code } );
-
-    }
+  = code:CodeBlock EOS
 
 Rule
-  = name:Identifier __ displayName:(@StringLiteral __)? "=" __ expression:Expression EOS {
-
-        if ( displayName )
-
-            expression = createNode( "named", {
-                name: displayName,
-                expression: expression,
-            } );
-
-        return createNode( "rule", { name, expression } );
-
-    }
+  = name:Identifier __ displayName:(@StringLiteral __)? "=" __ expression:Expression EOS
 
 Expression
   = ChoiceExpression
 
 ChoiceExpression
-  = head:ActionExpression tail:(__ "/" __ @ActionExpression)* {
-
-        if ( tail.length === 0 ) return head;
-
-        return createNode( "choice", {
-            alternatives: [ head ].concat( tail ),
-        } );
-
-    }
+  = head:ActionExpression tail:(__ "/" __ @ActionExpression)*
 
 ActionExpression
-  = expression:SequenceExpression code:(__ @CodeBlock)? {
-
-        if ( code === null ) return expression;
-
-        return createNode( "action", { expression, code } );
-
-    }
+  = expression:SequenceExpression code:(__ @CodeBlock)?
 
 SequenceExpression
-  = head:LabeledExpression tail:(__ @LabeledExpression)* {
-
-        let elements = [ head ];
-
-        if ( tail.length === 0 ) {
-
-            if ( head.type !== "labeled" || ! head.pick ) return head;
-
-        } else {
-
-            elements = elements.concat( tail );
-
-        }
-
-        return createNode( "sequence", { elements } );
-
-    }
+  = head:LabeledExpression tail:(__ @LabeledExpression)*
 
 LabeledExpression
-  = "@" label:LabelIdentifier? __ expression:PrefixedExpression {
-
-        return createNode( "labeled", { pick, label, expression } );
-
-    }
-  / label:LabelIdentifier __ expression:PrefixedExpression {
-
-        return createNode( "labeled", { label, expression } );
-
-    }
+  = "@" label:LabelIdentifier? __ expression:PrefixedExpression
+  / label:LabelIdentifier __ expression:PrefixedExpression
   / PrefixedExpression
 
 LabelIdentifier
-  = name:Identifier __ ":" {
-
-        if ( RESERVED_WORDS[ name ] !== true ) return name;
-
-        error( `Label can't be a reserved word "${ name }".`, location() );
-
-    }
+  = name:Identifier __ ":"
 
 PrefixedExpression
-  = operator:PrefixedOperator __ expression:SuffixedExpression {
-
-        return createNode( operator, { expression } );
-
-    }
+  = operator:PrefixedOperator __ expression:SuffixedExpression
   / SuffixedExpression
 
 PrefixedOperator
-  = "$" { return "text"; }
-  / "&" { return "simple_and"; }
-  / "!" { return "simple_not"; }
+  = "$"
+  / "&"
+  / "!"
 
 SuffixedExpression
-  = expression:PrimaryExpression __ operator:SuffixedOperator {
-
-        return createNode( operator, { expression } );
-
-    }
+  = expression:PrimaryExpression __ operator:SuffixedOperator
   / PrimaryExpression
 
 SuffixedOperator
-  = "?" { return "optional"; }
-  / "*" { return "zero_or_more"; }
-  / "+" { return "one_or_more"; }
+  = "?"
+  / "*"
+  / "+"
 
 PrimaryExpression
   = LiteralMatcher
@@ -225,35 +107,17 @@ PrimaryExpression
   / AnyMatcher
   / RuleReferenceExpression
   / SemanticPredicateExpression
-  / "(" __ e:Expression __ ")" {
-
-        // The purpose of the "group" AST node is just to isolate label scope. We
-        // don't need to put it around nodes that can't contain any labels or
-        // nodes that already isolate label scope themselves.
-        if ( e.type !== "labeled" && e.type !== "sequence" ) return e;
-
-        // This leaves us with "labeled" and "sequence".
-        return createNode( "group", { expression: e } );
-
-    }
+  / "(" __ e:Expression __ ")"
 
 RuleReferenceExpression
-  = name:Identifier !(__ (StringLiteral __)? "=") {
-
-        return createNode( "rule_ref", { name } );
-
-    }
+  = name:Identifier !(__ (StringLiteral __)? "=")
 
 SemanticPredicateExpression
-  = operator:SemanticPredicateOperator __ code:CodeBlock {
-
-        return createNode( operator, { code } );
-
-    }
+  = operator:SemanticPredicateOperator __ code:CodeBlock
 
 SemanticPredicateOperator
-  = "&" { return "semantic_and"; }
-  / "!" { return "semantic_not"; }
+  = "&"
+  / "!"
 
 // ---- Lexical Grammar -----
 
@@ -284,32 +148,16 @@ Comment "comment"
   / SingleLineComment
 
 MultiLineComment
-  = "/*" comment:$(!"*/" SourceCharacter)* "*/" {
-
-        return addComment( comment, true );
-
-  }
+  = "/*" comment:$(!"*/" SourceCharacter)* "*/"
 
 MultiLineCommentNoLineTerminator
-  = "/*" comment:$(!("*/" / LineTerminator) SourceCharacter)* "*/" {
-
-        return addComment( comment, true );
-
-  }
+  = "/*" comment:$(!("*/" / LineTerminator) SourceCharacter)* "*/"
 
 SingleLineComment
-  = "//" comment:$(!LineTerminator SourceCharacter)* {
-
-        return addComment( comment, false );
-
-  }
+  = "//" comment:$(!LineTerminator SourceCharacter)*
 
 Identifier "identifier"
-  = head:IdentifierStart tail:IdentifierPart* {
-      
-        return head + tail.join("");
-
-    }
+  = head:IdentifierStart tail:IdentifierPart*
 
 IdentifierStart
   = UnicodeLetter
@@ -344,18 +192,11 @@ UnicodeConnectorPunctuation
   = Pc
 
 LiteralMatcher "literal"
-  = value:StringLiteral ignoreCase:"i"? {
-
-        return createNode( "literal", {
-            value: value,
-            ignoreCase: ignoreCase !== null,
-        } );
-
-    }
+  = value:StringLiteral ignoreCase:"i"?
 
 StringLiteral "string"
-  = '"' chars:DoubleStringCharacter* '"' { return chars.join(""); }
-  / "'" chars:SingleStringCharacter* "'" { return chars.join(""); }
+  = '"' chars:DoubleStringCharacter* '"'
+  / "'" chars:SingleStringCharacter* "'"
 
 DoubleStringCharacter
   = !('"' / "\\" / LineTerminator) @SourceCharacter
@@ -368,15 +209,7 @@ SingleStringCharacter
   / LineContinuation
 
 CharacterClassMatcher "character class"
-  = "[" inverted:"^"? parts:CharacterPart* "]" ignoreCase:"i"? {
-
-        return createNode( "class", {
-            parts: parts.filter( part => part !== "" ),
-            inverted: inverted !== null,
-            ignoreCase: ignoreCase !== null,
-        } );
-
-    }
+  = "[" inverted:"^"? parts:CharacterPart* "]" ignoreCase:"i"?
 
 CharacterPart
   = ClassCharacterRange
@@ -399,7 +232,7 @@ ClassCharacter
   / LineContinuation
 
 LineContinuation
-  = "\\" LineTerminatorSequence { return ""; }
+  = "\\" LineTerminatorSequence
 
 EscapeSequence
   = CharacterEscapeSequence
@@ -452,11 +285,7 @@ HexDigit
   = [0-9a-f]i
 
 AnyMatcher
-  = "." {
-
-        return createNode( "any" );
-
-    }
+  = "."
 
 CodeBlock "code block"
   = "{" @Code "}"
