@@ -1,6 +1,7 @@
 {
   "name": "vscode-pegjs",
   "version": "0.1.0",
+  "publisher": "tamuratak",
   "license": "MIT",
   "description": "PEG.js language support for Visual Studio Code",
   "homepage": "https://github.com/tamuratak/vscode-pegjs",
@@ -38,7 +39,7 @@
   "devDependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.12.12",
-    "@types/vscode": "^1.35.0",
+    "@types/vscode": "^1.30.0",
     "mocha": "^6.1.4",
     "pegjs": "dev",
     "tslint": "^5.16.0",
