@@ -25,7 +25,7 @@ export declare class SyntaxError extends Error {
 }
 
 export type ParserOptions = {
-    startRule?: 'Root' | 'Preamble';
+    startRule?: string;
     tracer?: Tracer;
     enableComment?: boolean;
 }
