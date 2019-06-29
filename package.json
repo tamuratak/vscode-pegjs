@@ -1,5 +1,6 @@
 {
   "name": "vscode-pegjs",
+  "displayName": "PEG.js",
   "version": "0.1.0",
   "publisher": "tamuratak",
   "license": "MIT",
