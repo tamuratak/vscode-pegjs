@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import {PegjsDefinitionProvider} from './definitionProvider'
 import {PegjsReferenceProvider} from './referenceProvider'
+import {PegjsRenameProvider} from './renameProvider'
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
@@ -13,6 +14,12 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerReferenceProvider(
             { scheme: 'file', language: 'pegjs'},
             new PegjsReferenceProvider()
+        )
+    )
+    context.subscriptions.push(
+        vscode.languages.registerRenameProvider(
+            { scheme: 'file', language: 'pegjs'},
+            new PegjsRenameProvider()
         )
     )
 }
