@@ -24,21 +24,4 @@ export declare class SyntaxError extends Error {
     name : 'SyntaxError';
 }
 
-export type ParserOptions = {
-    startRule?: string;
-    tracer?: Tracer;
-    enableComment?: boolean;
-}
-
-export type TraceArg = {
-    type: 'rule.enter' | 'rule.match' | 'rule.fail';
-    rule: string;
-    result: string | Node;
-    location: Location;
-}
-
-export type Tracer = {
-    trace: (e: TraceArg) => any;
-}
-
-export declare function parse(input: string, options?: ParserOptions): PegjsTable;
+export declare function parse(input: string): PegjsTable;
