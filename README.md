@@ -7,6 +7,7 @@ PEG.js language support for Visual Studio Code. This extension provides basic fe
 - Find All References
 - Peek References
 - Rename Symbols
+- Outline
 
 You can install this extension from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=tamuratak.vscode-pegjs).
 
