@@ -49,19 +49,29 @@ SOFTWARE.
 // [1] http://www.ecma-international.org/publications/standards/Ecma-262.htm
 
 {
-
+  const definitonMap = new Map();
+  const referenceMap = new Map();
 }
 
 // ---- Syntactic Grammar -----
 
 Grammar
   = __ initializer:(@Initializer __)? rules:(@Rule __)+
+  {
+    return {defs: definitonMap, refs: referenceMap};
+  }
 
 Initializer
   = code:CodeBlock EOS
 
 Rule
   = name:Identifier __ displayName:(@StringLiteral __)? "=" __ expression:Expression EOS
+  {
+    const defName = name.name;
+    const loc = name.location;
+    definitonMap.set(defName, loc);
+    return name;
+  }
 
 Expression
   = ChoiceExpression
@@ -111,6 +121,15 @@ PrimaryExpression
 
 RuleReferenceExpression
   = name:Identifier !(__ (StringLiteral __)? "=")
+  {
+    const ref = name.name;
+    const loc = name.location;
+    if (!referenceMap.has(ref)) {
+      referenceMap.set(ref, []);
+    }
+    referenceMap.get(ref).push(loc);
+    return name;
+  }
 
 SemanticPredicateExpression
   = operator:SemanticPredicateOperator __ code:CodeBlock
@@ -157,7 +176,11 @@ SingleLineComment
   = "//" comment:$(!LineTerminator SourceCharacter)*
 
 Identifier "identifier"
-  = head:IdentifierStart tail:IdentifierPart*
+  = head:$IdentifierStart tail:$(IdentifierPart*)
+  {
+    const name = head === '$' ? tail : head + tail
+    return { name, location: location() };
+  }
 
 IdentifierStart
   = UnicodeLetter
