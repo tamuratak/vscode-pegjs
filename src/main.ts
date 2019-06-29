@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'
 import {PegjsDefinitionProvider} from './definitionProvider'
 import {PegjsReferenceProvider} from './referenceProvider'
 import {PegjsRenameProvider} from './renameProvider'

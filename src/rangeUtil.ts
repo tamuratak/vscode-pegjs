@@ -1,4 +1,4 @@
-import {Range, Location} from 'vscode';
+import {Range, Location} from 'vscode'
 import * as parser from './parser'
 
 export function tokenLocationToRange(loc: parser.Location) : Range {

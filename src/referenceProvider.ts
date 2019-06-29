@@ -1,4 +1,4 @@
-import {TextDocument, Position, Location, ProviderResult, ReferenceProvider, ReferenceContext} from 'vscode';
+import {TextDocument, Position, Location, ProviderResult, ReferenceProvider, ReferenceContext} from 'vscode'
 import * as pegjsParser from './parser'
 import {tokenLocationToRange, uniqueLocations} from './rangeUtil'
 
@@ -6,7 +6,7 @@ export class PegjsReferenceProvider implements ReferenceProvider {
 
     constructor() {}
 
-    public provideReferences(document: TextDocument, position: Position, context: ReferenceContext): ProviderResult<Location[]> {
+    public provideReferences(document: TextDocument, position: Position, context: ReferenceContext) : ProviderResult<Location[]> {
         const idRange = document.getWordRangeAtPosition(position)
         const id = document.getText(idRange)
         const pegjsTable = pegjsParser.parse(document.getText())
@@ -14,7 +14,7 @@ export class PegjsReferenceProvider implements ReferenceProvider {
         const refLocations = pegjsTable.refs.get(id) || []
         const ret: Location[] = []
 
-        if (!defLocation){
+        if (!defLocation) {
             return undefined
         }
 
