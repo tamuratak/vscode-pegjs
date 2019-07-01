@@ -1,5 +1,6 @@
-import {TextDocument, Position, Range, Location, ProviderResult, DefinitionProvider} from 'vscode'
+import {TextDocument, Position, Location, ProviderResult, DefinitionProvider} from 'vscode'
 import * as pegjsParser from './parser'
+import {tokenLocationToRange} from './rangeUtil'
 
 export class PegjsDefinitionProvider implements DefinitionProvider {
 
@@ -13,12 +14,7 @@ export class PegjsDefinitionProvider implements DefinitionProvider {
         if (!defLocation) {
             return undefined
         }
-        const defRange = new Range(
-            defLocation.start.line - 1,
-            defLocation.start.column - 1,
-            defLocation.end.line - 1,
-            defLocation.end.column - 1
-        )
+        const defRange = tokenLocationToRange(defLocation)
         return new Location(document.uri, defRange)
     }
 }
