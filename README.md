@@ -9,6 +9,8 @@ PEG.js language support for Visual Studio Code. This extension provides basic fe
 - Rename Symbols
 - Outline
 
+![context menu](https://raw.githubusercontent.com/tamuratak/vscode-pegjs/master/demo/contextMenu.png)
+
 You can install this extension from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=tamuratak.vscode-pegjs).
 
 For syntax highlighting, you have to install one of the following extensions:
