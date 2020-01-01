@@ -6,7 +6,7 @@ export class PegjsRenameProvider implements RenameProvider {
 
     constructor() {}
 
-    public provideRenameEdits(document: TextDocument, position: Position, newName: string) : ProviderResult<WorkspaceEdit> {
+    public provideRenameEdits(document: TextDocument, position: Position, newName: string): ProviderResult<WorkspaceEdit> {
         const idRange = document.getWordRangeAtPosition(position)
         const id = document.getText(idRange)
         const pegjsTable = pegjsParser.parse(document.getText())

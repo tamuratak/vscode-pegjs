@@ -6,7 +6,7 @@ export class PegjsReferenceProvider implements ReferenceProvider {
 
     constructor() {}
 
-    public provideReferences(document: TextDocument, position: Position, context: ReferenceContext) : ProviderResult<Location[]> {
+    public provideReferences(document: TextDocument, position: Position, context: ReferenceContext): ProviderResult<Location[]> {
         const idRange = document.getWordRangeAtPosition(position)
         const id = document.getText(idRange)
         const pegjsTable = pegjsParser.parse(document.getText())

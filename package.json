@@ -41,6 +41,9 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^12",
     "@types/vscode": "^1.30.0",
+    "@typescript-eslint/eslint-plugin": "^2.12.0",
+    "@typescript-eslint/parser": "^2.12.0",
+    "eslint": "^6.7.2",
     "mocha": "^6.2.2",
     "pegjs": "dev",
     "typescript": "^3.7.4"
@@ -54,10 +57,11 @@
     "pegjs"
   ],
   "scripts": {
-    "generate": "pegjs -o out/src/parser.js src/parser.pegjs",
-    "compile": "tsc -p ./",
     "build": "npm run compile && npm run generate",
+    "compile": "tsc -p ./",
     "clean": "rm -rf out/src/* out/test/*",
+    "generate": "pegjs -o out/src/parser.js src/parser.pegjs",
+    "lint": "eslint --cache --ext .ts .",
     "test": "mocha --ui tdd out/test/**/*.js"
   }
 }

@@ -6,7 +6,7 @@ export class PegjsDefinitionProvider implements DefinitionProvider {
 
     constructor() {}
 
-    public provideDefinition(document: TextDocument, position: Position) : ProviderResult<Location> {
+    public provideDefinition(document: TextDocument, position: Position): ProviderResult<Location> {
         const idRange = document.getWordRangeAtPosition(position)
         const id = document.getText(idRange)
         const pegjsTable = pegjsParser.parse(document.getText())
