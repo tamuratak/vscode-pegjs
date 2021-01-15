@@ -5,8 +5,6 @@ import {tokenLocationToRange} from './rangeUtil'
 
 export class PegjsSymbolProvider implements DocumentSymbolProvider {
 
-    constructor() {}
-
     provideDocumentSymbols(document: TextDocument) {
         const pegjsTable = pegjsParser.parse(document.getText())
         const defMap = pegjsTable.defs

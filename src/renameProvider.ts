@@ -4,8 +4,6 @@ import {tokenLocationToRange, uniqueLocations} from './rangeUtil'
 
 export class PegjsRenameProvider implements RenameProvider {
 
-    constructor() {}
-
     public provideRenameEdits(document: TextDocument, position: Position, newName: string): ProviderResult<WorkspaceEdit> {
         const idRange = document.getWordRangeAtPosition(position)
         const id = document.getText(idRange)

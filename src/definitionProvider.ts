@@ -4,8 +4,6 @@ import {tokenLocationToRange} from './rangeUtil'
 
 export class PegjsDefinitionProvider implements DefinitionProvider {
 
-    constructor() {}
-
     public provideDefinition(document: TextDocument, position: Position): ProviderResult<Location> {
         const idRange = document.getWordRangeAtPosition(position)
         const id = document.getText(idRange)
